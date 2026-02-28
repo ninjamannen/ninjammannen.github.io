@@ -1,36 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sv">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Temperature Monitor</title>
+  <title>Långviken</title>
 
-  <!-- ── PWA / Home Screen app settings ── -->
-  <!-- Tells iOS this can be used as a standalone app -->
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <!-- Sets the status bar style (black looks best on dark dashboards) -->
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <!-- The name shown under the icon on the home screen -->
-  <meta name="apple-mobile-web-app-title" content="Temp Monitor">
-  <!-- Theme colour for the browser chrome on Android too -->
+  <meta name="apple-mobile-web-app-title" content="Långviken">
   <meta name="theme-color" content="#0d1117">
 
-  <!-- ── Home screen icons for iPhone ──
-       Create a 180x180 pixel PNG of your icon and upload it
-       to your GitHub repo as apple-touch-icon.png
-       A simple thermometer emoji on a dark background works well.
-       If you skip this, iOS will use a screenshot of the page instead. -->
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
-
-  <!-- Web App Manifest (also helps on Android) -->
   <link rel="manifest" href="manifest.json">
 
-  <!-- Chart.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-adapter-date-fns/3.0.0/chartjs-adapter-date-fns.bundle.min.js"></script>
 
   <style>
-    /* ── All your existing CSS stays exactly as it was ── */
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
@@ -38,7 +24,6 @@
       background: #0d1117;
       color: #e6edf3;
       min-height: 100vh;
-      /* Safe area insets for iPhone notch and home bar */
       padding-top: env(safe-area-inset-top);
       padding-bottom: env(safe-area-inset-bottom);
     }
@@ -50,7 +35,6 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      /* Stick to top when scrolling */
       position: sticky;
       top: 0;
       z-index: 100;
@@ -79,7 +63,6 @@
       border-radius: 12px;
       padding: 16px;
       transition: border-color 0.2s;
-      /* Tap highlight on mobile */
       -webkit-tap-highlight-color: transparent;
     }
     .card:active { border-color: #58a6ff; transform: scale(0.98); }
@@ -113,11 +96,10 @@
 
     .charts {
       display: grid;
-      grid-template-columns: 1fr;  /* Single column on mobile */
+      grid-template-columns: 1fr;
       gap: 20px;
     }
 
-    /* Two columns on wider screens */
     @media (min-width: 900px) {
       .charts { grid-template-columns: repeat(2, 1fr); }
     }
@@ -147,7 +129,6 @@
       font-size: 0.85rem;
     }
 
-    /* Pull-to-refresh indicator */
     #refresh-hint {
       text-align: center;
       color: #8b949e;
@@ -159,9 +140,9 @@
 <body>
 
 <header>
-  <span>🌡️</span>
-  <h1>Temperature Monitor</h1>
-  <div id="last-updated">Loading...</div>
+  <span>🌊</span>
+  <h1>Långviken</h1>
+  <div id="last-updated">Laddar...</div>
 </header>
 
 <main>
@@ -170,7 +151,7 @@
   <div class="cards">
     <div class="card">
       <div class="card-label">
-        <span class="card-dot" style="background:#38bdf8"></span>Water Temp
+        <span class="card-dot" style="background:#38bdf8"></span>Vattentemperatur
       </div>
       <div class="card-value" id="val-water">
         --<span class="card-unit">°C</span>
@@ -178,7 +159,7 @@
     </div>
     <div class="card">
       <div class="card-label">
-        <span class="card-dot" style="background:#fb923c"></span>Indoor Temp
+        <span class="card-dot" style="background:#fb923c"></span>Inomhustemperatur
       </div>
       <div class="card-value" id="val-indoor">
         --<span class="card-unit">°C</span>
@@ -186,7 +167,7 @@
     </div>
     <div class="card">
       <div class="card-label">
-        <span class="card-dot" style="background:#4ade80"></span>Outdoor Temp
+        <span class="card-dot" style="background:#4ade80"></span>Utomhustemperatur
       </div>
       <div class="card-value" id="val-outdoor">
         --<span class="card-unit">°C</span>
@@ -194,7 +175,7 @@
     </div>
     <div class="card">
       <div class="card-label">
-        <span class="card-dot" style="background:#c084fc"></span>Humidity
+        <span class="card-dot" style="background:#c084fc"></span>Luftfuktighet
       </div>
       <div class="card-value" id="val-humidity">
         --<span class="card-unit">%</span>
@@ -202,23 +183,23 @@
     </div>
     <div class="card">
       <div class="card-label">
-        <span class="card-dot" style="background:#f472b6"></span>Pressure
+        <span class="card-dot" style="background:#f472b6"></span>Lufttryck
       </div>
       <div class="card-value" id="val-pressure">
-        --<span class="card-unit">hPa</span>
+        --<span class="card-unit">mbar</span>
       </div>
     </div>
   </div>
 
-  <p id="refresh-hint">Pull down to refresh</p>
+  <p id="refresh-hint">Dra nedåt för att uppdatera</p>
 
   <div class="charts">
     <div class="chart-box">
-      <h2>🌡 Temperature — 24h</h2>
+      <h2>🌡 Temperatur — 168h</h2>
       <canvas id="chart-temp"></canvas>
     </div>
     <div class="chart-box">
-      <h2>💧 Humidity &amp; Pressure — 24h</h2>
+      <h2>💧 Luftfuktighet &amp; Lufttryck — 168h</h2>
       <canvas id="chart-hum-pres"></canvas>
     </div>
   </div>
@@ -265,11 +246,15 @@ const tickColor = "#8b949e";
 function timeAxis() {
   return {
     type: "time",
-    time: { unit: "hour", displayFormats: { hour: "HH:mm" } },
-    ticks: { color: tickColor, maxTicksLimit: 6 },
-    grid: { color: gridColor }
+    time: {
+      unit: "day",
+      displayFormats: { day: "EEE dd/MM" }
+    },
+    ticks: { color: tickColor, maxTicksLimit: 8 },
+    grid:  { color: gridColor }
   };
 }
+
 function valueAxis(label) {
   return {
     ticks: { color: tickColor },
@@ -283,13 +268,13 @@ let chartTemp = new Chart(
   type: "line",
   data: {
     datasets: [
-      { label: "Water",   data: [], borderColor: "#38bdf8",
+      { label: "Vattentemperatur",   data: [], borderColor: "#38bdf8",
         backgroundColor: "rgba(56,189,248,0.08)",
         tension: 0.3, pointRadius: 0, borderWidth: 2, fill: true },
-      { label: "Indoor",  data: [], borderColor: "#fb923c",
+      { label: "Inomhustemperatur",  data: [], borderColor: "#fb923c",
         backgroundColor: "rgba(251,146,60,0.08)",
         tension: 0.3, pointRadius: 0, borderWidth: 2, fill: true },
-      { label: "Outdoor", data: [], borderColor: "#4ade80",
+      { label: "Utomhustemperatur",  data: [], borderColor: "#4ade80",
         backgroundColor: "rgba(74,222,128,0.08)",
         tension: 0.3, pointRadius: 0, borderWidth: 2, fill: true }
     ]
@@ -314,10 +299,10 @@ let chartHumPres = new Chart(
   type: "line",
   data: {
     datasets: [
-      { label: "Humidity (%)",    data: [], borderColor: "#c084fc",
+      { label: "Luftfuktighet (%)",  data: [], borderColor: "#c084fc",
         backgroundColor: "rgba(192,132,252,0.08)",
         tension: 0.3, pointRadius: 0, borderWidth: 2, fill: true, yAxisID: "yHum" },
-      { label: "Pressure (hPa)", data: [], borderColor: "#f472b6",
+      { label: "Lufttryck (mbar)",   data: [], borderColor: "#f472b6",
         backgroundColor: "rgba(244,114,182,0.08)",
         tension: 0.3, pointRadius: 0, borderWidth: 2, fill: true, yAxisID: "yPres" }
     ]
@@ -326,12 +311,20 @@ let chartHumPres = new Chart(
     responsive: true,
     interaction: { mode: "index", intersect: false },
     plugins: {
-      legend: { labels: { color: "#e6edf3", boxWidth: 10, font: { size: 11 } } }
+      legend: { labels: { color: "#e6edf3", boxWidth: 10, font: { size: 11 } } },
+      tooltip: {
+        callbacks: {
+          label: ctx => {
+            const unit = ctx.dataset.yAxisID === "yHum" ? "%" : "mbar";
+            return `${ctx.dataset.label}: ${ctx.parsed.y.toFixed(1)} ${unit}`;
+          }
+        }
+      }
     },
     scales: {
       x:     timeAxis(),
-      yHum:  { ...valueAxis("Humidity (%)"),   position: "left",  grid: { color: gridColor } },
-      yPres: { ...valueAxis("Pressure (hPa)"), position: "right", grid: { display: false } }
+      yHum:  { ...valueAxis("Luftfuktighet (%)"),  position: "left",  grid: { color: gridColor } },
+      yPres: { ...valueAxis("Lufttryck (mbar)"),   position: "right", grid: { display: false } }
     }
   }
 });
@@ -379,7 +372,9 @@ async function loadData() {
     updateCard("val-pressure", pres);
 
     document.getElementById("last-updated").textContent =
-      new Date().toLocaleTimeString();
+      "Senast: " + new Date().toLocaleTimeString("sv-SE", {
+        timeZone: "Europe/Stockholm"
+      });
 
   } catch(e) {
     showError(e.message);
@@ -392,7 +387,6 @@ loadData();
 setInterval(loadData, 60000);
 
 // ── Pull-to-refresh ───────────────────────────────
-// On mobile, pulling down triggers a reload
 let touchStartY = 0;
 document.addEventListener("touchstart", e => {
   touchStartY = e.touches[0].clientY;
@@ -400,11 +394,10 @@ document.addEventListener("touchstart", e => {
 
 document.addEventListener("touchend", e => {
   const diff = e.changedTouches[0].clientY - touchStartY;
-  // If pulled down more than 80px while already at top of page
   if (diff > 80 && window.scrollY === 0) {
-    document.getElementById("refresh-hint").textContent = "Refreshing...";
+    document.getElementById("refresh-hint").textContent = "Uppdaterar...";
     loadData().then(() => {
-      document.getElementById("refresh-hint").textContent = "Pull down to refresh";
+      document.getElementById("refresh-hint").textContent = "Dra nedåt för att uppdatera";
     });
   }
 }, { passive: true });

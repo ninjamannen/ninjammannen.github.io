@@ -32,7 +32,6 @@
       overflow-x: hidden;
     }
 
-    /* ── Full-screen fixed background image ── */
     #bg {
       position: fixed;
       inset: 0;
@@ -40,14 +39,11 @@
       background-size: cover;
       background-position: center center;
       background-repeat: no-repeat;
-      /* On iPhone, cover the notch area too */
       background-attachment: scroll;
       transition: background-image 1.5s ease-in-out;
       z-index: 0;
     }
 
-    /* Gradient overlay — dark at top and bottom, clear in middle
-       so the photo is visible but text is always readable */
     #bg::after {
       content: '';
       position: fixed;
@@ -62,7 +58,6 @@
       z-index: 1;
     }
 
-    /* Pulsing dark background shown while image loads */
     #bg.loading {
       animation: bgPulse 2s infinite;
     }
@@ -71,7 +66,6 @@
       50%       { background-color: #161b22; }
     }
 
-    /* ── Everything above the background ── */
     #page {
       position: relative;
       z-index: 2;
@@ -80,7 +74,6 @@
       flex-direction: column;
     }
 
-    /* ── Sticky header ── */
     header {
       position: sticky;
       top: 0;
@@ -112,7 +105,6 @@
       color: rgba(255,255,255,0.55);
     }
 
-    /* ── Status pill ── */
     .status-pill {
       display: flex;
       align-items: center;
@@ -138,7 +130,6 @@
       50%       { opacity: 0.3; }
     }
 
-    /* ── Main content ── */
     main {
       flex: 1;
       padding: 16px;
@@ -148,7 +139,6 @@
       margin: 0 auto;
     }
 
-    /* ── Error banner ── */
     #error-banner {
       display: none;
       background: rgba(61,31,31,0.85);
@@ -162,7 +152,6 @@
       font-size: 0.85rem;
     }
 
-    /* ── Sensor cards ── */
     .cards {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -208,6 +197,14 @@
       text-shadow: 0 1px 6px rgba(0,0,0,0.4);
     }
 
+    /* "Data saknas" styling — smaller, muted, italic */
+    .card-value.no-data {
+      font-size: 1rem;
+      font-weight: 400;
+      font-style: italic;
+      color: rgba(255,255,255,0.30);
+    }
+
     .card-unit {
       font-size: 0.85rem;
       font-weight: 400;
@@ -215,7 +212,6 @@
       margin-left: 2px;
     }
 
-    /* ── Camera bar ── */
     .cam-bar {
       display: flex;
       justify-content: space-between;
@@ -242,7 +238,6 @@
     }
     .cam-btn:active { background: rgba(255,255,255,0.15); }
 
-    /* ── Pull-to-refresh hint ── */
     #refresh-hint {
       text-align: center;
       color: rgba(255,255,255,0.35);
@@ -250,7 +245,6 @@
       padding: 6px 0 14px;
     }
 
-    /* ── Charts ── */
     .charts {
       display: grid;
       grid-template-columns: 1fr;
@@ -277,7 +271,26 @@
       color: rgba(255,255,255,0.85);
     }
 
-    /* ── Countdown ── */
+    /* "Data saknas" overlay on charts */
+    .chart-wrap {
+      position: relative;
+    }
+
+    .chart-no-data {
+      display: none;
+      position: absolute;
+      inset: 0;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-style: italic;
+      color: rgba(255,255,255,0.30);
+    }
+
+    .chart-no-data.visible {
+      display: flex;
+    }
+
     #countdown {
       text-align: center;
       font-size: 0.70rem;
@@ -288,10 +301,8 @@
 </head>
 <body>
 
-<!-- Full-screen background image -->
 <div id="bg" class="loading"></div>
 
-<!-- All content above the background -->
 <div id="page">
 
   <header>
@@ -307,20 +318,18 @@
   <main>
     <div id="error-banner"></div>
 
-    <!-- Camera timestamp + refresh button -->
     <div class="cam-bar">
       <div class="cam-info" id="camTime">Hämtar bild...</div>
       <button class="cam-btn" onclick="fetchCamera()">↻ Ny bild</button>
     </div>
 
-    <!-- Sensor cards -->
     <div class="cards">
       <div class="card">
         <div class="card-label">
           <span class="card-dot" style="background:#38bdf8"></span>Vattentemperatur
         </div>
         <div class="card-value" id="val-water">
-          --<span class="card-unit">°C</span>
+          <span class="card-unit">°C</span>
         </div>
       </div>
       <div class="card">
@@ -328,7 +337,7 @@
           <span class="card-dot" style="background:#fb923c"></span>Inomhustemperatur
         </div>
         <div class="card-value" id="val-indoor">
-          --<span class="card-unit">°C</span>
+          <span class="card-unit">°C</span>
         </div>
       </div>
       <div class="card">
@@ -336,7 +345,7 @@
           <span class="card-dot" style="background:#4ade80"></span>Utomhustemperatur
         </div>
         <div class="card-value" id="val-outdoor">
-          --<span class="card-unit">°C</span>
+          <span class="card-unit">°C</span>
         </div>
       </div>
       <div class="card">
@@ -344,7 +353,7 @@
           <span class="card-dot" style="background:#c084fc"></span>Luftfuktighet
         </div>
         <div class="card-value" id="val-humidity">
-          --<span class="card-unit">%</span>
+          <span class="card-unit">%</span>
         </div>
       </div>
       <div class="card">
@@ -352,39 +361,43 @@
           <span class="card-dot" style="background:#f472b6"></span>Lufttryck
         </div>
         <div class="card-value" id="val-pressure">
-          --<span class="card-unit">mbar</span>
+          <span class="card-unit">mbar</span>
         </div>
       </div>
     </div>
 
-    <!-- Countdown to next camera image -->
     <div id="countdown"></div>
 
     <p id="refresh-hint">Dra nedåt för att uppdatera</p>
 
-    <!-- Charts -->
     <div class="charts">
       <div class="chart-box">
         <h2>🌡 Temperatur — 168h</h2>
-        <canvas id="chart-temp"></canvas>
+        <div class="chart-wrap">
+          <canvas id="chart-temp"></canvas>
+          <div class="chart-no-data" id="no-data-temp">Data saknas</div>
+        </div>
       </div>
       <div class="chart-box">
         <h2>💧 Luftfuktighet &amp; Lufttryck — 168h</h2>
-        <canvas id="chart-hum-pres"></canvas>
+        <div class="chart-wrap">
+          <canvas id="chart-hum-pres"></canvas>
+          <div class="chart-no-data" id="no-data-humpres">Data saknas</div>
+        </div>
       </div>
     </div>
 
   </main>
-</div><!-- #page -->
+</div>
 
 <script>
 // ═══════════════════════════════════════════════════
 //  CONFIG
 // ═══════════════════════════════════════════════════
-const AIO_USERNAME = "Jollo77";
-const AIO_KEY      = "aio_rKcW76clP8qOwgJxeIlGaKxOmtSy";
-const HOURS        = 168;
-const CAMERA_REFRESH_MS = 3600000;  // 60 minutes — matches ESP-EYE upload interval
+const AIO_USERNAME      = "Jollo77";
+const AIO_KEY           = "aio_rKcW76clP8qOwgJxeIlGaKxOmtSy";
+const HOURS             = 168;
+const CAMERA_REFRESH_MS = 3600000;
 
 const FEEDS = {
   water:   "water-temperature",
@@ -394,7 +407,12 @@ const FEEDS = {
   pres:    "pressure"
 };
 
-// ── Adafruit IO helpers ───────────────────────────
+// ═══════════════════════════════════════════════════
+//  ADAFRUIT IO HELPERS
+//  Every function returns a safe value on failure —
+//  [] for history, null for latest — never throws
+// ═══════════════════════════════════════════════════
+
 function aioUrl(feed) {
   const end   = new Date();
   const start = new Date(end - HOURS * 3600 * 1000);
@@ -404,24 +422,43 @@ function aioUrl(feed) {
 }
 
 async function fetchFeed(feedKey) {
-  const r = await fetch(aioUrl(FEEDS[feedKey]));
-  if (!r.ok) throw new Error(`Feed "${feedKey}": HTTP ${r.status}`);
-  const data = await r.json();
-  return data.reverse().map(d => ({
-    x: new Date(d.created_at),
-    y: parseFloat(d.value)
-  }));
+  try {
+    const r = await fetch(aioUrl(FEEDS[feedKey]));
+    if (!r.ok) {
+      console.warn(`Feed "${feedKey}" HTTP ${r.status}`);
+      return [];
+    }
+    const data = await r.json();
+    if (!Array.isArray(data) || data.length === 0) return [];
+    return data.reverse().map(d => ({
+      x: new Date(d.created_at),
+      y: parseFloat(d.value)
+    }));
+  } catch (e) {
+    console.warn(`Feed "${feedKey}" failed:`, e.message);
+    return [];
+  }
 }
 
-// Fetch most recent single value from a named feed
 async function fetchLatest(feedName) {
-  const url = `https://io.adafruit.com/api/v2/${AIO_USERNAME}/feeds/${feedName}/data/last`;
-  const r = await fetch(url, { headers: { 'X-AIO-Key': AIO_KEY } });
-  if (!r.ok) throw new Error(`Latest "${feedName}": HTTP ${r.status}`);
-  return r.json();
+  try {
+    const url = `https://io.adafruit.com/api/v2/${AIO_USERNAME}/feeds/${feedName}/data/last`;
+    const r   = await fetch(url, { headers: { 'X-AIO-Key': AIO_KEY } });
+    if (!r.ok) {
+      console.warn(`fetchLatest "${feedName}" HTTP ${r.status}`);
+      return null;
+    }
+    return await r.json();
+  } catch (e) {
+    console.warn(`fetchLatest "${feedName}" failed:`, e.message);
+    return null;
+  }
 }
 
-// ── Time formatters ───────────────────────────────
+// ═══════════════════════════════════════════════════
+//  TIME FORMATTERS
+// ═══════════════════════════════════════════════════
+
 function fmtTime(iso) {
   if (!iso) return '–';
   return new Date(iso).toLocaleTimeString('sv-SE', {
@@ -445,29 +482,77 @@ function fmtCountdown(totalSeconds) {
   return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
 }
 
-// ── Camera / background ───────────────────────────
+// ═══════════════════════════════════════════════════
+//  CARD UPDATER
+//  Shows the value if data exists, otherwise shows
+//  "Data saknas" in a muted italic style
+// ═══════════════════════════════════════════════════
+
+function updateCard(id, points, decimals = 1) {
+  const el   = document.getElementById(id);
+  const unit = el.querySelector('.card-unit');
+
+  if (!points || points.length === 0) {
+    // No data — show "Data saknas", hide unit
+    el.classList.add('no-data');
+    unit.style.display = 'none';
+    // Remove any previous value text node
+    while (el.firstChild && el.firstChild !== unit) {
+      el.removeChild(el.firstChild);
+    }
+    el.insertBefore(
+      document.createTextNode('Data saknas'),
+      unit
+    );
+    return;
+  }
+
+  // Data available — show value + unit normally
+  el.classList.remove('no-data');
+  unit.style.display = '';
+  const latest = points[points.length - 1].y;
+  while (el.firstChild && el.firstChild !== unit) {
+    el.removeChild(el.firstChild);
+  }
+  el.insertBefore(
+    document.createTextNode(latest.toFixed(decimals)),
+    unit
+  );
+}
+
+// ═══════════════════════════════════════════════════
+//  CAMERA / BACKGROUND
+//  Completely isolated — failure here never affects
+//  sensor cards or charts
+// ═══════════════════════════════════════════════════
+
 let lastCameraFetch = 0;
 let countdownTimer  = null;
 
 async function fetchCamera() {
   try {
+    console.log('Fetching camera-url feed...');
     const data = await fetchLatest('camera-url');
+
     if (!data || !data.value) {
+      console.warn('camera-url feed empty or null');
       document.getElementById('camTime').textContent = 'Ingen bild ännu';
       return;
     }
 
+    console.log('Camera URL:', data.value);
     const url = data.value + '?t=' + Date.now();
     const bg  = document.getElementById('bg');
 
-    // Preload before swapping so there is no blank flash
-    const img = new Image();
-    img.onload = () => {
+    const img    = new Image();
+    img.onload   = () => {
       bg.classList.remove('loading');
       bg.style.backgroundImage = `url('${url}')`;
+      console.log('Background image set OK');
     };
-    img.onerror = () => {
-      document.getElementById('camTime').textContent = 'Kunde inte ladda bild';
+    img.onerror  = () => {
+      console.warn('Background image load failed:', url);
+      document.getElementById('camTime').textContent = 'Bild kunde inte laddas';
     };
     img.src = url;
 
@@ -477,9 +562,9 @@ async function fetchCamera() {
     lastCameraFetch = Date.now();
     startCountdown();
 
-  } catch (err) {
-    console.error('Kamera fel:', err);
-    document.getElementById('camTime').textContent = 'Fel vid hämtning';
+  } catch (e) {
+    console.warn('fetchCamera error (non-fatal):', e.message);
+    document.getElementById('camTime').textContent = 'Kamerafel';
   }
 }
 
@@ -488,15 +573,19 @@ function startCountdown() {
   const el = document.getElementById('countdown');
   countdownTimer = setInterval(() => {
     const elapsed   = Date.now() - lastCameraFetch;
-    const remaining = Math.max(0, Math.floor((CAMERA_REFRESH_MS - elapsed) / 1000));
-    el.textContent  = remaining > 0
+    const remaining = Math.max(0,
+      Math.floor((CAMERA_REFRESH_MS - elapsed) / 1000));
+    el.textContent = remaining > 0
       ? `Nästa bild om ${fmtCountdown(remaining)}`
       : 'Hämtar ny bild...';
     if (remaining === 0) clearInterval(countdownTimer);
   }, 1000);
 }
 
-// ── Charts ────────────────────────────────────────
+// ═══════════════════════════════════════════════════
+//  CHARTS
+// ═══════════════════════════════════════════════════
+
 const gridColor = "rgba(255,255,255,0.07)";
 const tickColor = "rgba(255,255,255,0.45)";
 
@@ -555,10 +644,12 @@ let chartHumPres = new Chart(
     datasets: [
       { label: "Luftfuktighet (%)", data: [], borderColor: "#c084fc",
         backgroundColor: "rgba(192,132,252,0.10)",
-        tension: 0.3, pointRadius: 0, borderWidth: 2, fill: true, yAxisID: "yHum" },
+        tension: 0.3, pointRadius: 0, borderWidth: 2, fill: true,
+        yAxisID: "yHum" },
       { label: "Lufttryck (mbar)",  data: [], borderColor: "#f472b6",
         backgroundColor: "rgba(244,114,182,0.10)",
-        tension: 0.3, pointRadius: 0, borderWidth: 2, fill: true, yAxisID: "yPres" }
+        tension: 0.3, pointRadius: 0, borderWidth: 2, fill: true,
+        yAxisID: "yPres" }
     ]
   },
   options: {
@@ -577,79 +668,141 @@ let chartHumPres = new Chart(
     },
     scales: {
       x:     timeAxis(),
-      yHum:  { ...valueAxis("Luftfuktighet (%)"), position: "left",  grid: { color: gridColor } },
-      yPres: { ...valueAxis("Lufttryck (mbar)"),  position: "right", grid: { display: false } }
+      yHum:  { ...valueAxis("Luftfuktighet (%)"), position: "left",
+               grid: { color: gridColor } },
+      yPres: { ...valueAxis("Lufttryck (mbar)"),  position: "right",
+               grid: { display: false } }
     }
   }
 });
 
-// ── Card updater ──────────────────────────────────
-function updateCard(id, points) {
-  if (!points.length) return;
-  const latest = points[points.length - 1].y;
-  const el   = document.getElementById(id);
-  const unit = el.querySelector(".card-unit").outerHTML;
-  el.innerHTML = latest.toFixed(1) + unit;
+// Show or hide "Data saknas" overlay on a chart
+function setChartNoData(overlayId, hasData) {
+  const el = document.getElementById(overlayId);
+  if (hasData) {
+    el.classList.remove('visible');
+  } else {
+    el.classList.add('visible');
+  }
 }
 
-// ── Error helpers ─────────────────────────────────
+// ═══════════════════════════════════════════════════
+//  LOAD SENSOR DATA
+//  Promise.allSettled means every feed is attempted
+//  independently — one failure never blocks others
+// ═══════════════════════════════════════════════════
+
 function showError(msg) {
   const b = document.getElementById("error-banner");
-  b.textContent  = "⚠ " + msg;
+  b.textContent   = "⚠ " + msg;
   b.style.display = "block";
 }
+
 function clearError() {
   document.getElementById("error-banner").style.display = "none";
 }
 
-// ── Load sensor data ──────────────────────────────
 async function loadData() {
   try {
     clearError();
-    const [water, indoor, outdoor, hum, pres] = await Promise.all([
-      fetchFeed("water"), fetchFeed("indoor"), fetchFeed("outdoor"),
-      fetchFeed("hum"),   fetchFeed("pres")
+    console.log('Loading sensor data...');
+
+    // allSettled — all feeds run regardless of individual failures
+    const results = await Promise.allSettled([
+      fetchFeed("water"),
+      fetchFeed("indoor"),
+      fetchFeed("outdoor"),
+      fetchFeed("hum"),
+      fetchFeed("pres")
     ]);
 
+    // Safe extraction — [] if a feed failed at the Promise level
+    const water   = results[0].status === 'fulfilled' ? results[0].value : [];
+    const indoor  = results[1].status === 'fulfilled' ? results[1].value : [];
+    const outdoor = results[2].status === 'fulfilled' ? results[2].value : [];
+    const hum     = results[3].status === 'fulfilled' ? results[3].value : [];
+    const pres    = results[4].status === 'fulfilled' ? results[4].value : [];
+
+    console.log(
+      `water:${water.length} indoor:${indoor.length} ` +
+      `outdoor:${outdoor.length} hum:${hum.length} pres:${pres.length}`
+    );
+
+    // ── Update sensor cards ──────────────────────────
+    // Each card independently shows value or "Data saknas"
+    updateCard("val-water",    water);
+    updateCard("val-indoor",   indoor);
+    updateCard("val-outdoor",  outdoor);
+    updateCard("val-humidity", hum,   1);
+    updateCard("val-pressure", pres,  0);
+
+    // ── Update temperature chart ─────────────────────
     chartTemp.data.datasets[0].data = water;
     chartTemp.data.datasets[1].data = indoor;
     chartTemp.data.datasets[2].data = outdoor;
     chartTemp.update("none");
 
+    // Show "Data saknas" on temp chart only if ALL three
+    // temperature feeds are empty
+    const hasTempData = water.length > 0 ||
+                        indoor.length > 0 ||
+                        outdoor.length > 0;
+    setChartNoData('no-data-temp', hasTempData);
+
+    // ── Update humidity/pressure chart ───────────────
     chartHumPres.data.datasets[0].data = hum;
     chartHumPres.data.datasets[1].data = pres;
     chartHumPres.update("none");
 
-    updateCard("val-water",    water);
-    updateCard("val-indoor",   indoor);
-    updateCard("val-outdoor",  outdoor);
-    updateCard("val-humidity", hum);
-    updateCard("val-pressure", pres);
+    const hasHumPresData = hum.length > 0 || pres.length > 0;
+    setChartNoData('no-data-humpres', hasHumPresData);
 
-    document.getElementById("statusDot").classList.remove("offline");
-    document.getElementById("statusText").textContent = "Online";
+    // ── Status indicator ────────────────────────────
+    const anyData = hasTempData || hasHumPresData;
+    if (anyData) {
+      document.getElementById("statusDot").classList.remove("offline");
+      document.getElementById("statusText").textContent = "Online";
+    } else {
+      document.getElementById("statusDot").classList.add("offline");
+      document.getElementById("statusText").textContent = "Ingen data";
+    }
+
     document.getElementById("last-updated").textContent =
       "Senast: " + new Date().toLocaleTimeString("sv-SE", {
         timeZone: "Europe/Stockholm"
       });
 
-  } catch(e) {
-    showError(e.message);
-    console.error(e);
+  } catch (e) {
+    // Safety net — should never reach here given individual
+    // try/catch in fetchFeed, but included for completeness
+    console.error('loadData unexpected error:', e);
+    showError("Fel vid dataladdning: " + e.message);
     document.getElementById("statusDot").classList.add("offline");
     document.getElementById("statusText").textContent = "Offline";
   }
 }
 
-// ── Initialise ────────────────────────────────────
+// ═══════════════════════════════════════════════════
+//  INITIALISE — camera and sensors fully independent
+// ═══════════════════════════════════════════════════
+
+// Set all cards to "Data saknas" immediately on load
+// so there is never a blank/broken state before data arrives
+['val-water','val-indoor','val-outdoor','val-humidity','val-pressure']
+  .forEach(id => updateCard(id, []));
+
 loadData();
 fetchCamera();
 
-setInterval(loadData,    60000);          // sensors every 60 s
-setInterval(fetchCamera, CAMERA_REFRESH_MS); // camera every 60 min
+setInterval(loadData,    60000);
+setInterval(fetchCamera, CAMERA_REFRESH_MS);
 
-// ── Pull-to-refresh ───────────────────────────────
+// ═══════════════════════════════════════════════════
+//  PULL-TO-REFRESH
+// ═══════════════════════════════════════════════════
+
 let touchStartY = 0;
+
 document.addEventListener("touchstart", e => {
   touchStartY = e.touches[0].clientY;
 }, { passive: true });
@@ -658,11 +811,15 @@ document.addEventListener("touchend", e => {
   const diff = e.changedTouches[0].clientY - touchStartY;
   if (diff > 80 && window.scrollY === 0) {
     document.getElementById("refresh-hint").textContent = "Uppdaterar...";
-    Promise.all([loadData(), fetchCamera()]).then(() => {
-      document.getElementById("refresh-hint").textContent = "Dra nedåt för att uppdatera";
-    });
+    loadData();
+    fetchCamera();
+    setTimeout(() => {
+      document.getElementById("refresh-hint").textContent =
+        "Dra nedåt för att uppdatera";
+    }, 3000);
   }
 }, { passive: true });
+
 </script>
 </body>
 </html>

@@ -208,6 +208,13 @@
       font-size: 0.72rem;
       padding: 6px 0 14px;
     }
+    .section-heading {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: rgba(255,255,255,0.40);
+      margin: 20px 0 10px;
+    }
     .charts {
       display: grid;
       grid-template-columns: 1fr;
@@ -222,13 +229,19 @@
       -webkit-backdrop-filter: blur(14px);
       border: 1px solid rgba(255,255,255,0.10);
       border-radius: 14px;
-      padding: 16px 14px;
+      padding: 16px 14px 12px;
     }
     .chart-box h2 {
       font-size: 0.85rem;
       font-weight: 600;
-      margin-bottom: 12px;
+      margin-bottom: 4px;
       color: rgba(255,255,255,0.85);
+    }
+    .chart-minmax {
+      font-size: 0.68rem;
+      color: rgba(255,255,255,0.38);
+      margin-bottom: 10px;
+      min-height: 1em;
     }
     .chart-wrap { position: relative; }
     .chart-no-data {
@@ -267,80 +280,132 @@
 
   <main>
     <div id="error-banner"></div>
+
     <div class="cam-bar">
       <div class="cam-info" id="camTime">Hämtar bild...</div>
       <button class="cam-btn" onclick="fetchCamera()">↻ Ny bild</button>
     </div>
+
     <div class="cards">
       <div class="card">
         <div class="card-label">
           <span class="card-dot" style="background:#38bdf8"></span>Vattentemperatur
         </div>
-        <div class="card-value" id="val-water">
-          <span class="card-unit">°C</span>
-        </div>
+        <div class="card-value" id="val-water"><span class="card-unit">°C</span></div>
       </div>
       <div class="card">
         <div class="card-label">
           <span class="card-dot" style="background:#fb923c"></span>Inomhustemperatur
         </div>
-        <div class="card-value" id="val-indoor">
-          <span class="card-unit">°C</span>
-        </div>
+        <div class="card-value" id="val-indoor"><span class="card-unit">°C</span></div>
       </div>
       <div class="card">
         <div class="card-label">
           <span class="card-dot" style="background:#4ade80"></span>Utomhustemperatur
         </div>
-        <div class="card-value" id="val-outdoor">
-          <span class="card-unit">°C</span>
-        </div>
+        <div class="card-value" id="val-outdoor"><span class="card-unit">°C</span></div>
       </div>
       <div class="card">
         <div class="card-label">
           <span class="card-dot" style="background:#c084fc"></span>Luftfuktighet
         </div>
-        <div class="card-value" id="val-humidity">
-          <span class="card-unit">%</span>
-        </div>
+        <div class="card-value" id="val-humidity"><span class="card-unit">%</span></div>
       </div>
       <div class="card">
         <div class="card-label">
           <span class="card-dot" style="background:#f472b6"></span>Lufttryck
         </div>
-        <div class="card-value" id="val-pressure">
-          <span class="card-unit">mbar</span>
-        </div>
+        <div class="card-value" id="val-pressure"><span class="card-unit">mbar</span></div>
       </div>
     </div>
+
     <div id="countdown"></div>
     <p id="refresh-hint">Dra nedåt för att uppdatera</p>
+
+    <!-- Overview charts — 7 days -->
+    <div class="section-heading">Översikt — senaste 7 dagarna</div>
     <div class="charts">
       <div class="chart-box">
-        <h2>🌡 Temperatur — 168h</h2>
+        <h2>🌡 Temperatur — 7 dagar</h2>
+        <div class="chart-minmax" id="mm-temp-overview"></div>
         <div class="chart-wrap">
           <canvas id="chart-temp"></canvas>
           <div class="chart-no-data" id="no-data-temp">Data saknas</div>
         </div>
       </div>
       <div class="chart-box">
-        <h2>💧 Luftfuktighet &amp; Lufttryck — 168h</h2>
+        <h2>💧 Luftfuktighet &amp; Lufttryck — 7 dagar</h2>
+        <div class="chart-minmax" id="mm-humpres-overview"></div>
         <div class="chart-wrap">
           <canvas id="chart-hum-pres"></canvas>
           <div class="chart-no-data" id="no-data-humpres">Data saknas</div>
         </div>
       </div>
     </div>
+
+    <!-- Individual charts — 30 days -->
+    <div class="section-heading">Individuella mätningar — senaste 30 dagarna</div>
+    <div class="charts">
+
+      <div class="chart-box">
+        <h2>🌊 Vattentemperatur — 30 dagar</h2>
+        <div class="chart-minmax" id="mm-water"></div>
+        <div class="chart-wrap">
+          <canvas id="chart-water"></canvas>
+          <div class="chart-no-data" id="no-data-water">Data saknas</div>
+        </div>
+      </div>
+
+      <div class="chart-box">
+        <h2>🏠 Inomhustemperatur — 30 dagar</h2>
+        <div class="chart-minmax" id="mm-indoor"></div>
+        <div class="chart-wrap">
+          <canvas id="chart-indoor"></canvas>
+          <div class="chart-no-data" id="no-data-indoor">Data saknas</div>
+        </div>
+      </div>
+
+      <div class="chart-box">
+        <h2>🌿 Utomhustemperatur — 30 dagar</h2>
+        <div class="chart-minmax" id="mm-outdoor"></div>
+        <div class="chart-wrap">
+          <canvas id="chart-outdoor"></canvas>
+          <div class="chart-no-data" id="no-data-outdoor">Data saknas</div>
+        </div>
+      </div>
+
+      <div class="chart-box">
+        <h2>💧 Luftfuktighet — 30 dagar</h2>
+        <div class="chart-minmax" id="mm-humidity"></div>
+        <div class="chart-wrap">
+          <canvas id="chart-humidity"></canvas>
+          <div class="chart-no-data" id="no-data-humidity">Data saknas</div>
+        </div>
+      </div>
+
+      <div class="chart-box">
+        <h2>🌬 Lufttryck — 30 dagar</h2>
+        <div class="chart-minmax" id="mm-pressure"></div>
+        <div class="chart-wrap">
+          <canvas id="chart-pressure"></canvas>
+          <div class="chart-no-data" id="no-data-pressure">Data saknas</div>
+        </div>
+      </div>
+
+    </div>
   </main>
 </div>
 
 <script>
 var WORKER_URL        = 'https://langvikenproxy.jonas-c-lindh.workers.dev';
-var HOURS             = 168;
+var HOURS_OVERVIEW    = 168;
+var HOURS_DETAIL      = 720;
 var CAMERA_REFRESH_MS = 3600000;
 
-function fetchFeed(feedName) {
-  return fetch(WORKER_URL + '/history/' + feedName + '?hours=' + HOURS)
+// ── Fetch helpers ─────────────────────────────────
+
+function fetchFeed(feedName, hours) {
+  return fetch(WORKER_URL + '/history/' + feedName + '?hours=' + hours)
     .then(function(r) {
       if (!r.ok) { console.warn('history/' + feedName + ' HTTP ' + r.status); return []; }
       return r.json();
@@ -351,7 +416,10 @@ function fetchFeed(feedName) {
         return { x: new Date(d.created_at), y: parseFloat(d.value) };
       });
     })
-    .catch(function(e) { console.warn('fetchFeed ' + feedName + ' failed: ' + e.message); return []; });
+    .catch(function(e) {
+      console.warn('fetchFeed ' + feedName + ' failed: ' + e.message);
+      return [];
+    });
 }
 
 function fetchLatest(feedName) {
@@ -360,8 +428,13 @@ function fetchLatest(feedName) {
       if (!r.ok) { console.warn('feed/' + feedName + ' HTTP ' + r.status); return null; }
       return r.json();
     })
-    .catch(function(e) { console.warn('fetchLatest ' + feedName + ' failed: ' + e.message); return null; });
+    .catch(function(e) {
+      console.warn('fetchLatest ' + feedName + ' failed: ' + e.message);
+      return null;
+    });
 }
+
+// ── Time formatters ───────────────────────────────
 
 function fmtDateTime(iso) {
   if (!iso) return '–';
@@ -377,6 +450,42 @@ function fmtCountdown(totalSeconds) {
   var s = totalSeconds % 60;
   return (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
 }
+
+// ── Min/max with date and time ────────────────────
+
+function minMaxText(points, unit, decimals) {
+  if (!points || points.length === 0) return '';
+
+  var minVal   = points[0].y;
+  var maxVal   = points[0].y;
+  var minPoint = points[0];
+  var maxPoint = points[0];
+
+  for (var i = 1; i < points.length; i++) {
+    if (points[i].y < minVal) { minVal = points[i].y; minPoint = points[i]; }
+    if (points[i].y > maxVal) { maxVal = points[i].y; maxPoint = points[i]; }
+  }
+
+  function fmtDT(date) {
+    return date.toLocaleString('sv-SE', {
+      timeZone: 'Europe/Stockholm',
+      month: '2-digit', day: '2-digit',
+      hour: '2-digit', minute: '2-digit'
+    });
+  }
+
+  return 'Min: ' + minVal.toFixed(decimals) + ' ' + unit +
+         ' (' + fmtDT(minPoint.x) + ')' +
+         '  |  Max: ' + maxVal.toFixed(decimals) + ' ' + unit +
+         ' (' + fmtDT(maxPoint.x) + ')';
+}
+
+function setMinMax(id, points, unit, decimals) {
+  var el = document.getElementById(id);
+  if (el) el.textContent = minMaxText(points, unit, decimals);
+}
+
+// ── Card updater ──────────────────────────────────
 
 function updateCard(id, points, decimals) {
   if (decimals === undefined) decimals = 1;
@@ -397,6 +506,14 @@ function updateCard(id, points, decimals) {
     el.removeChild(el.firstChild);
   el.insertBefore(document.createTextNode(latest.toFixed(decimals)), unit);
 }
+
+function setChartNoData(overlayId, hasData) {
+  var el = document.getElementById(overlayId);
+  if (hasData) { el.classList.remove('visible'); }
+  else         { el.classList.add('visible');    }
+}
+
+// ── Camera ────────────────────────────────────────
 
 var lastCameraFetch = 0;
 var countdownTimer  = null;
@@ -419,7 +536,8 @@ function fetchCamera() {
         document.getElementById('camTime').textContent = 'Bild kunde inte laddas';
       };
       img.src = url;
-      document.getElementById('camTime').textContent = 'Tagen: ' + fmtDateTime(data.created_at);
+      document.getElementById('camTime').textContent =
+        'Tagen: ' + fmtDateTime(data.created_at);
       lastCameraFetch = Date.now();
       startCountdown();
     })
@@ -442,13 +560,15 @@ function startCountdown() {
   }, 1000);
 }
 
+// ── Chart helpers ─────────────────────────────────
+
 var gridColor = "rgba(255,255,255,0.07)";
 var tickColor = "rgba(255,255,255,0.45)";
 
 function timeAxis() {
   return {
     type: "time",
-    time: { unit: "day", displayFormats: { day: "EEE dd/MM" } },
+    time: { unit: "day", displayFormats: { day: "dd/MM" } },
     ticks: { color: tickColor, maxTicksLimit: 8 },
     grid:  { color: gridColor }
   };
@@ -461,6 +581,38 @@ function valueAxis(label) {
     title: { display: true, text: label, color: tickColor, font: { size: 10 } }
   };
 }
+
+function makeSingleChart(canvasId, label, color, yLabel, tooltipUnit) {
+  return new Chart(document.getElementById(canvasId).getContext("2d"), {
+    type: "line",
+    data: {
+      datasets: [{
+        label: label,
+        data: [],
+        borderColor: color,
+        backgroundColor: color.replace(')', ',0.10)').replace('rgb', 'rgba'),
+        tension: 0.3, pointRadius: 0, borderWidth: 2, fill: true
+      }]
+    },
+    options: {
+      responsive: true,
+      interaction: { mode: "index", intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) {
+              return label + ': ' + ctx.parsed.y.toFixed(1) + ' ' + tooltipUnit;
+            }
+          }
+        }
+      },
+      scales: { x: timeAxis(), y: valueAxis(yLabel) }
+    }
+  });
+}
+
+// ── Create all charts ─────────────────────────────
 
 var chartTemp = new Chart(
   document.getElementById("chart-temp").getContext("2d"), {
@@ -534,11 +686,13 @@ var chartHumPres = new Chart(
   }
 });
 
-function setChartNoData(overlayId, hasData) {
-  var el = document.getElementById(overlayId);
-  if (hasData) { el.classList.remove('visible'); }
-  else         { el.classList.add('visible');    }
-}
+var chartWater    = makeSingleChart("chart-water",    "Vattentemperatur",  "#38bdf8", "°C",   "°C");
+var chartIndoor   = makeSingleChart("chart-indoor",   "Inomhustemperatur", "#fb923c", "°C",   "°C");
+var chartOutdoor  = makeSingleChart("chart-outdoor",  "Utomhustemperatur", "#4ade80", "°C",   "°C");
+var chartHumidity = makeSingleChart("chart-humidity", "Luftfuktighet",     "#c084fc", "%",    "%");
+var chartPressure = makeSingleChart("chart-pressure", "Lufttryck",         "#f472b6", "mbar", "mbar");
+
+// ── Error helpers ─────────────────────────────────
 
 function showError(msg) {
   var b = document.getElementById("error-banner");
@@ -550,31 +704,46 @@ function clearError() {
   document.getElementById("error-banner").style.display = "none";
 }
 
+// ── Load all data ─────────────────────────────────
+
 function loadData() {
   clearError();
+
   Promise.allSettled([
-    fetchFeed("water-temperature"),
-    fetchFeed("indoor-temperature"),
-    fetchFeed("outdoor-temperature"),
-    fetchFeed("humidity"),
-    fetchFeed("pressure")
+    fetchFeed("water-temperature",   HOURS_OVERVIEW),
+    fetchFeed("indoor-temperature",  HOURS_OVERVIEW),
+    fetchFeed("outdoor-temperature", HOURS_OVERVIEW),
+    fetchFeed("humidity",            HOURS_OVERVIEW),
+    fetchFeed("pressure",            HOURS_OVERVIEW),
+    fetchFeed("water-temperature",   HOURS_DETAIL),
+    fetchFeed("indoor-temperature",  HOURS_DETAIL),
+    fetchFeed("outdoor-temperature", HOURS_DETAIL),
+    fetchFeed("humidity",            HOURS_DETAIL),
+    fetchFeed("pressure",            HOURS_DETAIL)
   ]).then(function(results) {
+
+    // 7-day overview data
     var water   = results[0].status === 'fulfilled' ? results[0].value : [];
     var indoor  = results[1].status === 'fulfilled' ? results[1].value : [];
     var outdoor = results[2].status === 'fulfilled' ? results[2].value : [];
     var hum     = results[3].status === 'fulfilled' ? results[3].value : [];
     var pres    = results[4].status === 'fulfilled' ? results[4].value : [];
 
-    console.log('water:' + water.length + ' indoor:' + indoor.length +
-                ' outdoor:' + outdoor.length + ' hum:' + hum.length +
-                ' pres:' + pres.length);
+    // 30-day detail data
+    var waterD   = results[5].status  === 'fulfilled' ? results[5].value  : [];
+    var indoorD  = results[6].status  === 'fulfilled' ? results[6].value  : [];
+    var outdoorD = results[7].status  === 'fulfilled' ? results[7].value  : [];
+    var humD     = results[8].status  === 'fulfilled' ? results[8].value  : [];
+    var presD    = results[9].status  === 'fulfilled' ? results[9].value  : [];
 
-    updateCard("val-water",    water);
-    updateCard("val-indoor",   indoor);
-    updateCard("val-outdoor",  outdoor);
-    updateCard("val-humidity", hum,  1);
-    updateCard("val-pressure", pres, 0);
+    // Current value cards — use 30-day data for latest value
+    updateCard("val-water",    waterD.length   ? waterD   : water,   1);
+    updateCard("val-indoor",   indoorD.length  ? indoorD  : indoor,  1);
+    updateCard("val-outdoor",  outdoorD.length ? outdoorD : outdoor, 1);
+    updateCard("val-humidity", humD.length     ? humD     : hum,     1);
+    updateCard("val-pressure", presD.length    ? presD    : pres,    0);
 
+    // Overview charts (7 days)
     chartTemp.data.datasets[0].data = water;
     chartTemp.data.datasets[1].data = indoor;
     chartTemp.data.datasets[2].data = outdoor;
@@ -586,17 +755,49 @@ function loadData() {
 
     var hasTempData    = water.length > 0 || indoor.length > 0 || outdoor.length > 0;
     var hasHumPresData = hum.length > 0   || pres.length > 0;
-
     setChartNoData('no-data-temp',    hasTempData);
     setChartNoData('no-data-humpres', hasHumPresData);
 
-    var anyData = hasTempData || hasHumPresData;
+    // Min/max for overview charts uses 7-day data
+    var tempAll = water.concat(indoor, outdoor);
+    setMinMax('mm-temp-overview',    tempAll, '°C', 1);
+    setMinMax('mm-humpres-overview', hum,     '%',  1);
+
+    // Individual 30-day charts
+    chartWater.data.datasets[0].data    = waterD;
+    chartWater.update("none");
+    chartIndoor.data.datasets[0].data   = indoorD;
+    chartIndoor.update("none");
+    chartOutdoor.data.datasets[0].data  = outdoorD;
+    chartOutdoor.update("none");
+    chartHumidity.data.datasets[0].data = humD;
+    chartHumidity.update("none");
+    chartPressure.data.datasets[0].data = presD;
+    chartPressure.update("none");
+
+    setChartNoData('no-data-water',    waterD.length > 0);
+    setChartNoData('no-data-indoor',   indoorD.length > 0);
+    setChartNoData('no-data-outdoor',  outdoorD.length > 0);
+    setChartNoData('no-data-humidity', humD.length > 0);
+    setChartNoData('no-data-pressure', presD.length > 0);
+
+    // Min/max for 30-day charts
+    setMinMax('mm-water',    waterD,  '°C',   1);
+    setMinMax('mm-indoor',   indoorD, '°C',   1);
+    setMinMax('mm-outdoor',  outdoorD,'°C',   1);
+    setMinMax('mm-humidity', humD,    '%',    1);
+    setMinMax('mm-pressure', presD,   'mbar', 0);
+
+    // Status
+    var anyData = hasTempData || hasHumPresData ||
+                  waterD.length > 0 || humD.length > 0;
     document.getElementById("statusDot").classList.toggle("offline", !anyData);
     document.getElementById("statusText").textContent = anyData ? "Online" : "Ingen data";
     document.getElementById("last-updated").textContent =
       "Senast: " + new Date().toLocaleTimeString("sv-SE", {
         timeZone: "Europe/Stockholm"
       });
+
   }).catch(function(e) {
     console.error('loadData error:', e);
     showError("Fel: " + e.message);
@@ -605,7 +806,8 @@ function loadData() {
   });
 }
 
-// Initialise
+// ── Initialise ────────────────────────────────────
+
 var ids = ['val-water','val-indoor','val-outdoor','val-humidity','val-pressure'];
 for (var i = 0; i < ids.length; i++) { updateCard(ids[i], []); }
 
@@ -615,11 +817,13 @@ fetchCamera();
 setInterval(loadData,    60000);
 setInterval(fetchCamera, CAMERA_REFRESH_MS);
 
-// Pull-to-refresh
+// ── Pull-to-refresh ───────────────────────────────
+
 var touchStartY = 0;
 document.addEventListener("touchstart", function(e) {
   touchStartY = e.touches[0].clientY;
 }, { passive: true });
+
 document.addEventListener("touchend", function(e) {
   var diff = e.changedTouches[0].clientY - touchStartY;
   if (diff > 80 && window.scrollY === 0) {
